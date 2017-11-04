@@ -1,0 +1,43 @@
+{
+  "title": "Auth0 oauth/token API response",
+  "type": "object",
+  "properties": {
+    "primaryColor": {
+      "type": "string",
+      "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+    },
+    "logo": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+        },
+        {
+          "type": "string",
+          "maxLength": 0
+        }
+      ]
+    },
+    "labeledSubmitButton": {
+      "type": "boolean"
+    },
+    "allowShowPassword": {
+      "type": "boolean"
+    },
+    "allowForgotPassword": {
+      "type": "boolean"
+    },
+    "allowSignUp": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "primaryColor",
+    "logo",
+    "labeledSubmitButton",
+    "allowShowPassword",
+    "allowForgotPassword",
+    "allowSignUp"
+  ],
+  "additionalProperties": false
+}

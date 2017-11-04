@@ -8,12 +8,17 @@ const bodyParser = require('body-parser');
 const tokenService = require('./lib/token-service');
 const errorLoggerMiddleware = require('./middleware/error-logger');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+const { getLoginPageDataMiddleware, updateLoginPageDataMiddleware } = require('./middleware/api');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// TODO: secure end points
+app.get('/api/login-page-data', getLoginPageDataMiddleware);
+app.post('/api/login-page-data', updateLoginPageDataMiddleware);
 
 app.use(errorLoggerMiddleware);
 app.use(errorHandlerMiddleware);

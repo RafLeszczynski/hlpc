@@ -1,0 +1,8 @@
+{
+  "primaryColor": "#ea5323",
+  "logo": "",
+  "labeledSubmitButton": true,
+  "allowShowPassword": true,
+  "allowForgotPassword": true,
+  "allowSignUp": true
+}
