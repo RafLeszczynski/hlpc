@@ -1,0 +1,34 @@
+{
+  "name": "hlpc",
+  "version": "1.0.0",
+  "description": "Auth0 Hosted Login Pages Configurator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "node_modules/.bin/eslint ."
+  },
+  "keywords": [],
+  "author": "Rafal Leszczynski <raf.leszcz@gmail.com>",
+  "license": "ISC",
+  "engines": {
+    "node": ">= 8.9.0"
+  },
+  "private": true,
+  "devDependencies": {
+    "eslint": "^4.10.0",
+    "eslint-config-auth0": "^11.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0"
+  },
+  "dependencies": {
+    "ajv": "^5.3.0",
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "pino": "^4.9.0",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
+  }
+}
