@@ -1,0 +1,19 @@
+{
+  "title": "Hosted Landing Pages Configurator Edit options schema",
+  "type": "object",
+  "properties": {
+    "access_token": {
+      "type": "string"
+    },
+    "expires_in": {
+      "type": "integer"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "token_type": {
+      "type": "string"
+    }
+  },
+  "required": ["access_token", "expires_in", "token_type"]
+}

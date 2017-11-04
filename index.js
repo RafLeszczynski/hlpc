@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const log = require('pino')();
 const bodyParser = require('body-parser');
+const tokenService = require('./lib/token-service');
 const errorLoggerMiddleware = require('./middleware/error-logger');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
@@ -17,5 +18,10 @@ app.use(bodyParser.json());
 app.use(errorLoggerMiddleware);
 app.use(errorHandlerMiddleware);
 
-app.listen(port, () => log.info('Listening on port 3000!'));
+// get JWT token for using Auth0 Management API before the app starts
+tokenService.requestToken()
+  .then(() => app.listen(port, () => log.info(`Listening on port ${port}!`)))
+  // if requestToken rejects promise, process will exit
+  // simple logging to know what happen, should be improved for production use
+  .catch(err => log.error(err));
 
