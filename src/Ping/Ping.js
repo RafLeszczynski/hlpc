@@ -9,7 +9,7 @@ class Ping extends Component {
   }
   securedPing() {
     const { getAccessToken } = this.props.auth;
-    const headers = { 'Authorization': `Bearer ${getAccessToken()}`}
+    const headers = { Authorization: `Bearer ${getAccessToken()}` };
     axios.get(`${API_URL}/login-page-data`, { headers })
       .then(response => this.setState({ message: JSON.stringify(response.data) }))
       .catch(error => this.setState({ message: error.message }));
@@ -22,10 +22,10 @@ class Ping extends Component {
         <h1>Make a Call to the Server</h1>
         {
           isAuthenticated() && (
-              <Button bsStyle="primary" onClick={this.securedPing.bind(this)}>
+            <Button bsStyle="primary" onClick={this.securedPing.bind(this)}>
                 Call Private
-              </Button>
-            )
+            </Button>
+          )
         }
         <h2>{message}</h2>
       </div>
