@@ -1,0 +1,39 @@
+.btn-margin {
+  margin: 7px 3px;
+}
+
+.full-page {
+  bottom: 0;
+  max-width: 100%;
+  padding-top: 58px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: -1;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.preview-bg {
+  background: -webkit-radial-gradient(#40404b, #111118) rgba(34,34,40,0.94);
+  background: radial-gradient(#40404b, #111118) rgba(34,34,40,0.94);
+  height: 100%;
+}
+
+.no-border-radius {
+  border-radius: 0;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0;
+}
+
+.no-float {
+  float: none;
+}
+
+.float-right {
+  float: right;
+}

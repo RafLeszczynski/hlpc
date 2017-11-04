@@ -1,10 +1,8 @@
 import React from 'react';
-import { Redirect, Route, Router } from 'react-router-dom';
-import App from './App';
-import Home from './Home/Home';
-import Ping from './Ping/Ping';
-import Callback from './Callback/Callback';
-import Auth from './Auth/Auth';
+import { Route, Router } from 'react-router-dom';
+import App from './containers/App/App';
+import Callback from './components/Callback/Callback';
+import Auth from './lib/Auth';
 import history from './history';
 
 const auth = new Auth();
@@ -19,17 +17,6 @@ export const makeMainRoutes = () => (
   <Router history={history} component={App}>
     <div>
       <Route path="/" render={props => <App auth={auth} {...props} />} />
-      <Route path="/home" render={props => <Home auth={auth} {...props} />} />
-      <Route
-        path="/ping"
-        render={props => (
-          !auth.isAuthenticated() ? (
-            <Redirect to="/home" />
-          ) : (
-            <Ping auth={auth} {...props} />
-          )
-        )}
-      />
       <Route
         path="/callback"
         render={(props) => {
