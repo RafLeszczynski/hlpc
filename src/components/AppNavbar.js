@@ -1,10 +1,13 @@
 import React from 'react';
 import { Navbar, Button } from '@auth0/styleguide-react-components';
 
-export default ({ isAuthenticated, login, logout }) => (
+export default ({ isAuthenticated, login, logout, tenantName }) => (
   <Navbar className="no-border-radius no-bottom-margin" fluid>
     <Navbar.Header className="no-float">
-      <Navbar.Brand>Hosted Login Pages Configurator</Navbar.Brand>
+      <Navbar.Brand>
+        Hosted Login Pages Configurator -
+        <strong> {tenantName}</strong>
+      </Navbar.Brand>
       {
         !isAuthenticated() && (
           <Button

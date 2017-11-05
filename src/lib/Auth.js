@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js';
-import { AUTH_CONFIG } from '../config/auth0-variables';
+import { AUTH_CONFIG } from '../config/constants';
 import history from '../history';
 
 export default class Auth {
