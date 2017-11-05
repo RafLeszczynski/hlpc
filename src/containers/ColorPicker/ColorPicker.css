@@ -1,0 +1,38 @@
+.color-picker {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.color-picker-swatch {
+  background: #fff;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+  display: inline-block;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.color-picker-color {
+  border-radius: 2px;
+  height: 14px;
+  width: 36px;
+}
+
+.color-picker-popover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 101;
+}
+
+.color-picker-cover {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}

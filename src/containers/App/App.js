@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from '@auth0/styleguide-react-components';
-import { fetchLoginPageData, updateLoginPageData } from '../../lib/api-client'
+import { Grid, Row, Col, Well, Alert } from '@auth0/styleguide-react-components';
+import { fetchLoginPageData, updateLoginPageData } from '../../lib/api-client';
 import AppNavbar from '../../components/AppNavbar';
-import EditOptionsForm from "../../components/EditOptionsForm";
+import EditOptionsForm from '../../components/EditOptionsForm';
 import Preview from '../Preview';
 import { AUTH_CONFIG } from '../../config/constants';
+import { alertsMessages } from '../../config/messages'
 import './App.css';
 
 class App extends Component {
@@ -13,26 +14,43 @@ class App extends Component {
 
     this.state = {
       editOptions: null,
-      error: null,
+      errorCode: '',
       loadingEditOptions: false,
-      savingEditOptions: false
+      loadingEditOptionsFailed: false,
+      savingEditOptions: false,
+      saveSuccess: false
     };
 
     this.handleEditOptionsChange = this.handleEditOptionsChange.bind(this);
     this.handleEditOptionsSave = this.handleEditOptionsSave.bind(this);
+    this.handleAlertDismiss = this.handleAlertDismiss.bind(this);
   }
 
   componentDidMount() {
-    const { isAuthenticated } = this.props.auth;
+    const { clientHasWriteAccess } = this.props.auth;
 
-    isAuthenticated() && this.loadLoginPageData();
+    if (clientHasWriteAccess()) {
+      this.loadLoginPageData();
+    }
   }
 
   componentDidUpdate() {
-    const { isAuthenticated } = this.props.auth;
-    const { editOptions, loadingEditOptions, error } = this.state;
+    const { clientHasWriteAccess } = this.props.auth;
 
-    isAuthenticated() && !editOptions && !loadingEditOptions && !error && this.loadLoginPageData();
+    if (clientHasWriteAccess() && this.shouldLoadLoginPageData()) {
+      this.loadLoginPageData();
+    }
+  }
+
+  /**
+   * Helper method to check if request for login options should be made
+   * based on current state
+   * @returns {Boolean}
+   */
+  shouldLoadLoginPageData() {
+    const { editOptions, loadingEditOptions, loadingEditOptionsFailed } = this.state;
+
+    return !editOptions && !loadingEditOptions && !loadingEditOptionsFailed;
   }
 
   /**
@@ -45,7 +63,48 @@ class App extends Component {
 
     fetchLoginPageData(getAccessToken())
       .then(editOptions => this.setState({ editOptions, loadingEditOptions: false }))
-      .catch(err => this.setState({ error: err.message, loadingEditOptions: false }));
+      .catch(() => this.setState({
+        errorCode: 'loadPageDataFailed',
+        loadingEditOptions: false,
+        loadingEditOptionsFailed: true
+      }));
+  }
+
+  /**
+   * Handles state change - method passed to form elements as onChange handler
+   * @param {Event} event
+   */
+  handleEditOptionsChange(event) {
+    const { type, name, checked, value } = event.target;
+
+    this.setState({
+      editOptions: Object.assign(
+        {},
+        this.state.editOptions,
+        { [name]: type === 'checkbox' ? checked : value })
+    });
+  }
+
+  /**
+   * Handles save edit options action
+   */
+  handleEditOptionsSave() {
+    const { clientHasWriteAccess } = this.props.auth;
+
+    if (clientHasWriteAccess() && this.shouldUpdateLoginPageData()) {
+      this.updateLoginPageData();
+    }
+  }
+
+  /**
+   * Helper method to check if request to update login options should be made
+   * based on current state
+   * @returns {Boolean}
+   */
+  shouldUpdateLoginPageData() {
+    const { editOptions, savingEditOptions } = this.state;
+
+    return !!editOptions && !savingEditOptions;
   }
 
   /**
@@ -56,33 +115,38 @@ class App extends Component {
 
     this.setState({ savingEditOptions: true });
     updateLoginPageData(getAccessToken(), this.state.editOptions)
-      .then(() => this.setState({ savingEditOptions: false }))
-      .catch(err => this.setState({ error: err.message, savingEditOptions: false }));
+      .then(() => this.setState({
+        savingEditOptions: false,
+        saveSuccess: true,
+        errorCode: ''
+      }))
+      .catch(() => this.setState({
+        errorCode: 'updateLoginPageDataFailed',
+        saveSuccess: false,
+        savingEditOptions: false
+      }));
   }
 
   /**
-   * Handles state change - method passed to form elements as onChange handler
-   * @param {String} key
-   * @param {String|Boolean} value
+   * Oversimplified alerts cleanup
    */
-  handleEditOptionsChange(key, value) {
-    this.setState({
-      editOptions: Object.assign({}, this.state.editOptions, {[key]: value })
-    });
+  handleAlertDismiss() {
+    this.setState({ errorCode: '', saveSuccess: false });
   }
 
   /**
-   * Handles save edit options action
+   * Helper for getting flag to display alerts
+   * @returns {Boolean}
    */
-  handleEditOptionsSave() {
-    const { isAuthenticated } = this.props.auth;
-    const { editOptions, savingEditOptions } = this.state;
+  shouldShowAlert() {
+    const { errorCode, saveSuccess } = this.state;
 
-    isAuthenticated() && editOptions && !savingEditOptions && this.updateLoginPageData();
+    return !!errorCode || saveSuccess;
   }
 
   render() {
-    const { isAuthenticated, login, logout } = this.props.auth;
+    const { isAuthenticated, clientHasWriteAccess, userHasScopes, login, logout } = this.props.auth;
+    const { errorCode } = this.state;
 
     return (
       <div>
@@ -90,9 +154,35 @@ class App extends Component {
           isAuthenticated={isAuthenticated}
           login={login}
           logout={logout}
-          tenantName={AUTH_CONFIG.domain} />
+          tenantName={AUTH_CONFIG.domain}
+        />
+
         {
-          isAuthenticated() && this.state.editOptions && (
+          this.shouldShowAlert() && (
+            <Alert
+              bsStyle={errorCode ? 'danger' : 'success'}
+              onDismiss={this.handleAlertDismiss}
+            >
+              { errorCode ? alertsMessages[errorCode] : alertsMessages.updateLoginPageDataSuccess }
+            </Alert>
+          )
+        }
+
+        <div className="full-page center-content">
+          { !isAuthenticated() && (<Well>Please login in</Well>) }
+          {
+            isAuthenticated() && !userHasScopes([AUTH_CONFIG.editScope]) && (
+              <Well>
+                Unfortunately you do not have the appropriate credentials to use this app.
+                {' '}
+                Please contact with the administrator.
+              </Well>
+            )
+          }
+        </div>
+
+        {
+          clientHasWriteAccess() && this.state.editOptions && (
             <Grid className="full-page">
               <Row className="show-grid full-height">
                 <Col lg={4} className="full-height">
@@ -100,6 +190,7 @@ class App extends Component {
                     editOptions={this.state.editOptions}
                     update={this.handleEditOptionsChange}
                     save={this.handleEditOptionsSave}
+                    isSaving={this.state.savingEditOptions}
                   />
                 </Col>
                 <Col lg={8} className="preview-bg full-height center-content">

@@ -47,3 +47,28 @@
   align-items: center;
   justify-content: center;
 }
+
+.ui-switch {
+  display: block;
+  margin-bottom: 20px;
+  width: auto;
+}
+
+.ui-switch input[type=checkbox] {
+  cursor: pointer;
+}
+
+.ui-switch .status {
+  left: auto;
+  position: absolute;
+  right: 0;
+  width: 50px;
+}
+
+.color-black {
+  color: black;
+}
+
+.top-padding {
+  padding-top: 20px;
+}

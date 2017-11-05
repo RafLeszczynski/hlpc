@@ -1,15 +1,16 @@
 import React from 'react';
-import { FormGroup, Checkbox } from '@auth0/styleguide-react-components';
 
 export default ({ id, label, handleChange, value }) => {
   return (
-    <FormGroup>
-      <Checkbox
+    <div className="ui-switch">
+      <strong className="color-black">{label}</strong>
+      <input
+        name={id}
+        type="checkbox"
         checked={value}
-        onChange={(event) => handleChange(id, !value) }
-      >
-        {label}
-      </Checkbox>
-    </FormGroup>
+        onChange={handleChange}
+      />
+      <label htmlFor={id} className="status" />
+    </div>
   );
-}
+};

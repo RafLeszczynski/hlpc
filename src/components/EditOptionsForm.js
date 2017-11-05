@@ -1,29 +1,33 @@
 import React from 'react';
+import { Button } from '@auth0/styleguide-react-components';
 import createEditFormDataModel from '../lib/edit-options-data-decorator';
 import formComponents from '../helpers/form-components-mapper';
-import { Button } from '@auth0/styleguide-react-components';
 
-
-export default ({ editOptions, update, save }) => (
-  <form>
+export default ({ editOptions, update, save, isSaving }) => (
+  <form className="top-padding">
     {
       createEditFormDataModel(editOptions).map((option) => {
         const FormComponent = formComponents[option.type];
 
-        return <FormComponent
-          key={option.id}
-          label={option.id}
-          handleChange={update}
-          {...option}
-        />
+        return (
+          <FormComponent
+            key={option.id}
+            handleChange={update}
+            {...option}
+          />
+        );
       })
     }
+
     <Button
       bsStyle="primary"
       className="btn-margin btn-success"
+      bsSize="large"
+      block
+      disabled={isSaving}
       onClick={save}
     >
-      Save Changes
+      {!isSaving ? 'Save Changes' : 'Saving...'}
     </Button>
   </form>
-)
+);
