@@ -16,7 +16,8 @@
   "author": "Rafal Leszczynski <raf.leszcz@gmail.com>",
   "license": "ISC",
   "engines": {
-    "node": ">= 8.9.0"
+    "node": "8.9.0",
+    "npm": "5.5.1"
   },
   "private": true,
   "devDependencies": {
