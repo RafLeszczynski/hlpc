@@ -10,7 +10,7 @@
     "start-app-dev": "react-scripts start",
     "build-app": "react-scripts build",
     "eject-app": "react-scripts eject",
-    "build-and-start": "npm run buil-app && npm start"
+    "heroku-postbuild": "npm run build"
   },
   "keywords": [],
   "author": "Rafal Leszczynski <raf.leszcz@gmail.com>",
