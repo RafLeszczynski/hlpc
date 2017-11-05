@@ -42,7 +42,7 @@ export function updateLoginPageData(token, editOptions) {
       { editOptions },
       { headers: createHeaders(token) }
     )
-      .then(resp => resolve())
+      .then(() => resolve())
       .catch(err => reject(err.message));
   });
 }

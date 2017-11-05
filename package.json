@@ -47,10 +47,12 @@
     "pino": "^4.9.0",
     "react": "^15.6.2",
     "react-bootstrap": "^0.30.10",
+    "react-color": "^2.13.8",
     "react-dom": "^15.6.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.0.17",
+    "reactcss": "^1.2.3",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
   }

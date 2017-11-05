@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from '@auth0/styleguide-react-components';
-import { fetchLoginPageData, updateLoginPageData } from '../../lib/api-client'
+import { Grid, Row, Col, Well } from '@auth0/styleguide-react-components';
+import { fetchLoginPageData, updateLoginPageData } from '../../lib/api-client';
 import AppNavbar from '../../components/AppNavbar';
-import EditOptionsForm from "../../components/EditOptionsForm";
+import EditOptionsForm from '../../components/EditOptionsForm';
 import Preview from '../Preview';
 import { AUTH_CONFIG } from '../../config/constants';
 import './App.css';
@@ -15,6 +15,7 @@ class App extends Component {
       editOptions: null,
       error: null,
       loadingEditOptions: false,
+      loadingEditOptionsFailed: false,
       savingEditOptions: false
     };
 
@@ -23,16 +24,28 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { isAuthenticated } = this.props.auth;
+    const { clientHasWriteAccess } = this.props.auth;
 
-    isAuthenticated() && this.loadLoginPageData();
+    clientHasWriteAccess() && this.loadLoginPageData();
   }
 
   componentDidUpdate() {
-    const { isAuthenticated } = this.props.auth;
-    const { editOptions, loadingEditOptions, error } = this.state;
+    const { clientHasWriteAccess } = this.props.auth;
 
-    isAuthenticated() && !editOptions && !loadingEditOptions && !error && this.loadLoginPageData();
+    clientHasWriteAccess() &&
+      this.shouldLoadLoginPageData() &&
+      this.loadLoginPageData();
+  }
+
+  /**
+   * Helper method to check if request for login options should be made
+   * based on current state
+   * @returns {Boolean}
+   */
+  shouldLoadLoginPageData() {
+    const { editOptions, loadingEditOptions, loadingEditOptionsFailed } = this.state;
+
+    return !editOptions && !loadingEditOptions && !loadingEditOptionsFailed;
   }
 
   /**
@@ -45,7 +58,48 @@ class App extends Component {
 
     fetchLoginPageData(getAccessToken())
       .then(editOptions => this.setState({ editOptions, loadingEditOptions: false }))
-      .catch(err => this.setState({ error: err.message, loadingEditOptions: false }));
+      .catch(err => this.setState({
+        error: err.message,
+        loadingEditOptions: false,
+        loadingEditOptionsFailed: true
+      }));
+  }
+
+  /**
+   * Handles state change - method passed to form elements as onChange handler
+   * @param {Event} event
+   */
+  handleEditOptionsChange(event) {
+    const { type, name, checked, value } = event.target;
+
+    this.setState({
+      editOptions: Object.assign(
+        {},
+        this.state.editOptions,
+        { [name]: type === 'checkbox' ? checked : value })
+    });
+  }
+
+  /**
+   * Handles save edit options action
+   */
+  handleEditOptionsSave() {
+    const { clientHasWriteAccess } = this.props.auth;
+
+    clientHasWriteAccess() &&
+      this.shouldUpdateLoginPageData() &&
+      this.updateLoginPageData();
+  }
+
+  /**
+   * Helper method to check if request to update login options should be made
+   * based on current state
+   * @returns {Boolean}
+   */
+  shouldUpdateLoginPageData() {
+    const { editOptions, savingEditOptions } = this.state;
+
+    return !!editOptions && !savingEditOptions;
   }
 
   /**
@@ -60,29 +114,8 @@ class App extends Component {
       .catch(err => this.setState({ error: err.message, savingEditOptions: false }));
   }
 
-  /**
-   * Handles state change - method passed to form elements as onChange handler
-   * @param {String} key
-   * @param {String|Boolean} value
-   */
-  handleEditOptionsChange(key, value) {
-    this.setState({
-      editOptions: Object.assign({}, this.state.editOptions, {[key]: value })
-    });
-  }
-
-  /**
-   * Handles save edit options action
-   */
-  handleEditOptionsSave() {
-    const { isAuthenticated } = this.props.auth;
-    const { editOptions, savingEditOptions } = this.state;
-
-    isAuthenticated() && editOptions && !savingEditOptions && this.updateLoginPageData();
-  }
-
   render() {
-    const { isAuthenticated, login, logout } = this.props.auth;
+    const { isAuthenticated, clientHasWriteAccess, userHasScopes, login, logout } = this.props.auth;
 
     return (
       <div>
@@ -90,9 +123,24 @@ class App extends Component {
           isAuthenticated={isAuthenticated}
           login={login}
           logout={logout}
-          tenantName={AUTH_CONFIG.domain} />
+          tenantName={AUTH_CONFIG.domain}
+        />
+
+        <div className="full-page center-content">
+          { !isAuthenticated() && (<Well>Please login in</Well>) }
+          {
+            isAuthenticated() && !userHasScopes([AUTH_CONFIG.editScope]) && (
+              <Well>
+                Unfortunately you do not have the appropriate credentials to use this app.
+                {' '}
+                Please contact with the administrator.
+              </Well>
+            )
+          }
+        </div>
+
         {
-          isAuthenticated() && this.state.editOptions && (
+          clientHasWriteAccess() && this.state.editOptions && (
             <Grid className="full-page">
               <Row className="show-grid full-height">
                 <Col lg={4} className="full-height">
@@ -100,6 +148,7 @@ class App extends Component {
                     editOptions={this.state.editOptions}
                     update={this.handleEditOptionsChange}
                     save={this.handleEditOptionsSave}
+                    isSaving={this.state.savingEditOptions}
                   />
                 </Col>
                 <Col lg={8} className="preview-bg full-height center-content">

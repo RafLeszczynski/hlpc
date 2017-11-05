@@ -1,3 +1,7 @@
+import messages from '../config/messages';
+
+const hexColorPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
 /**
  * Maps options value to type used fo choosing appropriate component
  * @param {*} val
@@ -8,6 +12,8 @@ function mapValueToType(val) {
   switch (true) {
     case typeof val === 'boolean':
       return 'boolean';
+    case hexColorPattern.test(val):
+      return 'color';
     default:
       return 'text';
   }
@@ -24,6 +30,8 @@ export default (options) => {
     .map(key => ({
       id: key,
       value: options[key],
+      label: messages[key],
+      placeholder: messages[`${key}Placeholder`],
       type: mapValueToType(options[key])
     }));
-}
+};

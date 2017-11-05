@@ -1,16 +1,20 @@
+/* global localStorage */
+
 import auth0 from 'auth0-js';
 import { AUTH_CONFIG } from '../config/constants';
 import history from '../history';
 
 export default class Auth {
   constructor() {
+    this.requestedScopes = `openid ${AUTH_CONFIG.editScope}`;
+
     this.auth0 = new auth0.WebAuth({
       domain: AUTH_CONFIG.domain,
       clientID: AUTH_CONFIG.clientId,
       redirectUri: AUTH_CONFIG.callbackUrl,
       audience: AUTH_CONFIG.apiUrl,
       responseType: 'token id_token',
-      scope: `openid profile ${AUTH_CONFIG.editScope}`
+      scope: this.requestedScopes
     });
 
     this.login = this.login.bind(this);
@@ -18,6 +22,8 @@ export default class Auth {
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.getAccessToken = this.getAccessToken.bind(this);
+    this.userHasScopes = this.userHasScopes.bind(this);
+    this.clientHasWriteAccess = this.clientHasWriteAccess.bind(this);
   }
 
   login() {
@@ -42,9 +48,13 @@ export default class Auth {
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
+    const scopes = authResult.scope || this.requestedScopes || '';
+
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
+    localStorage.setItem('scopes', JSON.stringify(scopes));
+
     // navigate to the home route
     history.replace('/');
   }
@@ -71,5 +81,14 @@ export default class Auth {
     // access token's expiry time
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+  userHasScopes(scopes) {
+    const grantedScopes = JSON.parse(localStorage.getItem('scopes')).split(' ');
+    return scopes.every(scope => grantedScopes.includes(scope));
+  }
+
+  clientHasWriteAccess() {
+    return this.isAuthenticated() && this.userHasScopes([AUTH_CONFIG.editScope]);
   }
 }

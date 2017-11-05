@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import deepEqual from 'deep-equal';
 import Auth0Lock from 'auth0-lock';
-import { AUTH_CONFIG } from "../config/constants";
+import { AUTH_CONFIG } from '../config/constants';
 
 class App extends Component {
   componentDidMount() {
@@ -57,12 +57,12 @@ class App extends Component {
         primaryColor: editOptions.primaryColor,
         logo: editOptions.logo || null,
         labeledSubmitButton: editOptions.labeledSubmitButton
-      },
-    }
+      }
+    };
   }
 
   render() {
-    return <div id="preview" ref={(lockWrapper) => { this.lockWrapper = lockWrapper; }}/>
+    return <div id="preview" ref={(lockWrapper) => { this.lockWrapper = lockWrapper; }} />;
   }
 }
 

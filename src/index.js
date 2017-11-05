@@ -1,3 +1,5 @@
+/* global document */
+
 import ReactDOM from 'react-dom';
 import { makeMainRoutes } from './routes';
 
