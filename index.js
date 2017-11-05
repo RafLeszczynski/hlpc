@@ -15,6 +15,15 @@ const errorLoggerMiddleware = require('./server/middleware/error-logger');
 const errorHandlerMiddleware = require('./server/middleware/error-handler');
 const { getLoginPageDataMiddleware, updateLoginPageDataMiddleware } = require('./server/middleware/api');
 
+const fs = require('fs');
+fs.stat(path.resolve(__dirname, './build/index.html'), (err, stats) => {
+  if (err) {
+    log.error(err);
+  } else {
+    log.info(stats);
+  }
+});
+
 const app = express();
 const port = process.env.PORT_SERVER || 3001;
 
