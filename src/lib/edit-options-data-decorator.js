@@ -1,4 +1,4 @@
-import messages from '../config/messages';
+import { editOptionsMessages } from '../config/messages';
 
 const hexColorPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
@@ -30,8 +30,8 @@ export default (options) => {
     .map(key => ({
       id: key,
       value: options[key],
-      label: messages[key],
-      placeholder: messages[`${key}Placeholder`],
+      label: editOptionsMessages[key],
+      placeholder: editOptionsMessages[`${key}Placeholder`],
       type: mapValueToType(options[key])
     }));
 };
