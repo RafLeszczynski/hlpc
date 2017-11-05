@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button } from '@auth0/styleguide-react-components';
 import createEditFormDataModel from '../lib/edit-options-data-decorator';
 import formComponents from '../helpers/form-components-mapper';
 
-export default ({ editOptions, update, save, isSaving }) => (
+const EditOptionsForm = ({ editOptions, update, save, isSaving }) => (
   <form className="top-padding">
     {
       createEditFormDataModel(editOptions).map((option) => {
@@ -31,3 +32,15 @@ export default ({ editOptions, update, save, isSaving }) => (
     </Button>
   </form>
 );
+
+EditOptionsForm.propTypes = {
+  editOptions: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ])).isRequired,
+  update: PropTypes.func.isRequired,
+  save: PropTypes.func.isRequired,
+  isSaving: PropTypes.bool.isRequired
+};
+
+export default EditOptionsForm;

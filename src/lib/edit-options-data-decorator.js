@@ -24,8 +24,8 @@ function mapValueToType(val) {
  * @param {Object} options
  * @returns {Array}
  */
-export default (options) => {
-  return Object
+export default options => (
+  Object
     .keys(options)
     .map(key => ({
       id: key,
@@ -33,5 +33,5 @@ export default (options) => {
       label: editOptionsMessages[key],
       placeholder: editOptionsMessages[`${key}Placeholder`],
       type: mapValueToType(options[key])
-    }));
-};
+    }))
+);

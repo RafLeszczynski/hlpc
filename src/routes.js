@@ -7,13 +7,13 @@ import history from './history';
 
 const auth = new Auth();
 
-const handleAuthentication = (nextState, replace) => {
+const handleAuthentication = (nextState) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
     auth.handleAuthentication();
   }
 };
 
-export const makeMainRoutes = () => (
+export default () => (
   <Router history={history} component={App}>
     <div>
       <Route path="/" render={props => <App auth={auth} {...props} />} />

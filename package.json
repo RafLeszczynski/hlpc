@@ -45,6 +45,7 @@
     "history": "^4.7.2",
     "jwks-rsa": "^1.2.1",
     "pino": "^4.9.0",
+    "prop-types": "^15.6.0",
     "react": "^15.6.2",
     "react-bootstrap": "^0.30.10",
     "react-color": "^2.13.8",

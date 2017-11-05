@@ -1,7 +1,7 @@
 /* global document */
 
 import ReactDOM from 'react-dom';
-import { makeMainRoutes } from './routes';
+import makeMainRoutes from './routes';
 
 const routes = makeMainRoutes();
 

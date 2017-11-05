@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 import './ColorPicker.css';
 
-class SketchExample extends React.Component {
+class ColorPicker extends React.Component {
   constructor(props) {
     super(props);
 
@@ -47,7 +48,7 @@ class SketchExample extends React.Component {
     const { color } = this.state;
     const { id, handleChange } = this.props;
 
-    if (this.props.color !== color) {
+    if (this.props.value !== color) {
       handleChange({
         // in order to reuse the handleChange method
         // I decided to create interface matching the one for event object
@@ -92,4 +93,11 @@ class SketchExample extends React.Component {
   }
 }
 
-export default SketchExample;
+ColorPicker.propTypes = {
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired
+};
+
+export default ColorPicker;

@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Navbar, Button } from '@auth0/styleguide-react-components';
 
-export default ({ isAuthenticated, login, logout, tenantName }) => (
+const AppNavbar = ({ isAuthenticated, login, logout, tenantName }) => (
   <Navbar className="no-border-radius no-bottom-margin" fluid>
     <Navbar.Header className="no-float">
       <Navbar.Brand>
@@ -33,3 +34,12 @@ export default ({ isAuthenticated, login, logout, tenantName }) => (
     </Navbar.Header>
   </Navbar>
 );
+
+AppNavbar.propTypes = {
+  isAuthenticated: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
+  tenantName: PropTypes.string.isRequired
+};
+
+export default AppNavbar;

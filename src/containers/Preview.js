@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import deepEqual from 'deep-equal';
 import Auth0Lock from 'auth0-lock';
 import { AUTH_CONFIG } from '../config/constants';
 
-class App extends Component {
+class Preview extends Component {
   componentDidMount() {
     this.createLockWidget();
   }
@@ -66,4 +67,11 @@ class App extends Component {
   }
 }
 
-export default App;
+Preview.propTypes = {
+  editOptions: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ])).isRequired
+};
+
+export default Preview;

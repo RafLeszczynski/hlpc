@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Row, Col, Well, Alert } from '@auth0/styleguide-react-components';
 import { fetchLoginPageData, updateLoginPageData } from '../../lib/api-client';
 import AppNavbar from '../../components/AppNavbar';
 import EditOptionsForm from '../../components/EditOptionsForm';
 import Preview from '../Preview';
 import { AUTH_CONFIG } from '../../config/constants';
-import { alertsMessages } from '../../config/messages'
+import { alertsMessages } from '../../config/messages';
 import './App.css';
 
 class App extends Component {
@@ -194,7 +195,7 @@ class App extends Component {
                   />
                 </Col>
                 <Col lg={8} className="preview-bg full-height center-content">
-                  <Preview editOptions={this.state.editOptions}/>
+                  <Preview editOptions={this.state.editOptions} />
                 </Col>
               </Row>
             </Grid>
@@ -204,5 +205,9 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  auth: PropTypes.objectOf(PropTypes.any).isRequired
+};
 
 export default App;

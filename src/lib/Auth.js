@@ -1,4 +1,5 @@
-/* global localStorage */
+/* global localStorage alert */
+/* eslint class-methods-use-this: 0 */
 
 import auth0 from 'auth0-js';
 import { AUTH_CONFIG } from '../config/constants';
@@ -46,7 +47,7 @@ export default class Auth {
   setSession(authResult) {
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify(
-      authResult.expiresIn * 1000 + new Date().getTime()
+      (authResult.expiresIn * 1000) + new Date().getTime()
     );
     const scopes = authResult.scope || this.requestedScopes || '';
 
