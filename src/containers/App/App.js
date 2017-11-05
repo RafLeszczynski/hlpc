@@ -3,7 +3,8 @@ import { Grid, Row, Col } from '@auth0/styleguide-react-components';
 import { fetchLoginPageData, updateLoginPageData } from '../../lib/api-client'
 import AppNavbar from '../../components/AppNavbar';
 import EditOptionsForm from "../../components/EditOptionsForm";
-import { TENANT_NAME } from '../../config/constants';
+import Preview from '../Preview';
+import { AUTH_CONFIG } from '../../config/constants';
 import './App.css';
 
 class App extends Component {
@@ -89,7 +90,7 @@ class App extends Component {
           isAuthenticated={isAuthenticated}
           login={login}
           logout={logout}
-          tenantName={TENANT_NAME} />
+          tenantName={AUTH_CONFIG.domain} />
         {
           isAuthenticated() && this.state.editOptions && (
             <Grid className="full-page">
@@ -101,8 +102,8 @@ class App extends Component {
                     save={this.handleEditOptionsSave}
                   />
                 </Col>
-                <Col lg={8} className="preview-bg full-height">
-                  <p>{JSON.stringify(this.state.editOptions)}</p>
+                <Col lg={8} className="preview-bg full-height center-content">
+                  <Preview editOptions={this.state.editOptions}/>
                 </Col>
               </Row>
             </Grid>
