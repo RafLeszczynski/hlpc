@@ -15,17 +15,13 @@ const errorLoggerMiddleware = require('./server/middleware/error-logger');
 const errorHandlerMiddleware = require('./server/middleware/error-handler');
 const { getLoginPageDataMiddleware, updateLoginPageDataMiddleware } = require('./server/middleware/api');
 
-const fs = require('fs');
-fs.stat(path.resolve(__dirname, './build/index.html'), (err, stats) => {
-  if (err) {
-    log.error(err);
-  } else {
-    log.info(stats);
-  }
-});
-
 const app = express();
-const port = process.env.PORT_SERVER || 3001;
+// react-scripts uses $PORT variable
+// and on dev env server and app runs as separate services
+// while on heroku app is served from wildcard route
+const port = process.env.NODE_ENV === 'production' ?
+  process.env.PORT :
+  process.env.PORT_SERVER;
 
 const checkJwt = jwt({
   // Dynamically provide a signing key based on
