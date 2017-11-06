@@ -42,6 +42,10 @@
   box-shadow: rgba(0,0,0,.8) 0 1px 4px;
 }
 
+.auth0-lock-submit {
+  pointer-events: none;
+}
+
 .center-content {
   display: flex;
   align-items: center;
